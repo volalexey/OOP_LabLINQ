@@ -284,13 +284,17 @@ namespace Practice_Linq
             //Query 13: Вивести ТОП-3 найпопулярніши країни для проведення матчів на нейтральному полі.
             //Вихідні країни повині мати властивості: Country - назва країни, Count - кількість ігор.  
 
-            var selectedGames = games; // допиши запит
+            var selectedGames = games.Where(g => g.Neutral)
+                                     .GroupBy(g => g.Country)
+                                     .Select(group => new { Country = group.Key, Count = group.Count() })
+                                     .OrderByDescending(res => res.Count)
+                                     .Take(3);
 
 
             // Результат
             Console.WriteLine("\n======================== QUERY 13 ========================");
 
-            //foreach
+            foreach (var item in selectedGames) Console.WriteLine($"{item.Country} - {item.Count}");
 
         }
 
