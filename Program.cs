@@ -264,13 +264,17 @@ namespace Practice_Linq
             //Query 12: Вивести назви турнірів, кількість ігор яких з 2022 року більша за 200. Турніри відсортувати за кількістю ігор за спаданням.
             //Вихідні турніри повині мати властивості: Tournament - назва турніру, Count - кількість ігор.   
 
-            var selectedGames = games; // допиши запит
+            var selectedGames = games.Where(g => g.Date.Year >= 2022)
+                                     .GroupBy(g => g.Tournament)
+                                     .Select(group => new { Tournament = group.Key, Count = group.Count() })
+                                     .Where(res => res.Count > 200)
+                                     .OrderByDescending(res => res.Count);
 
 
             // Результат
             Console.WriteLine("\n======================== QUERY 12 ========================");
-            
-            //foreach
+
+            foreach (var item in selectedGames) Console.WriteLine($"{item.Tournament} - {item.Count}");
 
         }
 
