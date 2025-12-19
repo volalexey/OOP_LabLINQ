@@ -332,13 +332,18 @@ namespace Practice_Linq
             //Query 15: Вивести команди відсортовані за алфавітом, які за вечь час зіграли всього 1 гру.
             //Вихідні команди повині мати властивості: Team - назва команди, Count - кількість ігор.  
 
-            var selectedGames = games; // допиши запит
+            var selectedGames = games.Select(g => g.Home_team)
+                                     .Concat(games.Select(g => g.Away_team))
+                                     .GroupBy(t => t)
+                                     .Select(group => new { Team = group.Key, Count = group.Count() })
+                                     .Where(res => res.Count == 1)
+                                     .OrderBy(res => res.Team);
 
 
             // Результат
             Console.WriteLine("\n======================== QUERY 15 ========================");
 
-            //foreach
+            foreach (var item in selectedGames) Console.WriteLine($"{item.Team} - {item.Count}");
 
         }
 
