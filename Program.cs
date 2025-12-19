@@ -305,13 +305,23 @@ namespace Practice_Linq
             //Query 14: Вивести ТОП-5 турнірів за середньою результативністю (результативність - сума забитих м'ячів).
             //Вихідні турніри повині мати властивості: Tournament - назва турніру, AvgGoals - середня результативність.   
 
-            var selectedGames = games; // допиши запит
+            var selectedGames = games.GroupBy(g => g.Tournament)
+                                     .Select(group => new
+                                     {
+                                        Tournament = group.Key,
+                                        AvgGoals = group.Average(g => (double)g.Home_score + g.Away_score)
+                                     })
+                                     .OrderByDescending(res => res.AvgGoals)
+                                     .Take(5);
 
 
             // Результат
             Console.WriteLine("\n======================== QUERY 14 ========================");
 
-            //foreach
+            foreach (var item in selectedGames)
+            {
+                Console.WriteLine($"{item.Tournament} - {item.AvgGoals:F2}");
+            }
 
         }
 
