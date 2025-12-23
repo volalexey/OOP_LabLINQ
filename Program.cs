@@ -103,9 +103,11 @@ namespace Practice_Linq
         {
             //Query 4: Вивести всі матчі збірної Германії з 2018 року по 2020 рік (включно), в яких вона на виїзді програла.
 
-            var selectedGames = games.Where(g => g.Away_team == "Germany" &&
-                                           g.Date.Year >= 2018 && g.Date.Year <= 2020 &&
-                                           g.Away_score < g.Home_score);
+            var selectedGames = games.Where(n => (n.Away_team == "Germany" || n.Home_team == "Germany") 
+                                           && n.Country != "Germany")
+                                     .Where(n => n.Date.Year >= 2018 && n.Date.Year <= 2020)
+                                     .Where(n => (n.Away_score < n.Home_score && n.Away_team == "Germany") 
+                                           || (n.Home_score < n.Away_score && n.Home_team == "Germany"));
 
 
             // Результат
@@ -177,10 +179,10 @@ namespace Practice_Linq
             var selectedGames = games.Where(g => g.Tournament == "UEFA Euro" && g.Country == "Ukraine")
                                      .Select(g => new
                                      {
-                                        MatchYear = g.Date.Year,
-                                        Team1 = g.Home_team,
-                                        Team2 = g.Away_team,
-                                        Goals = g.Home_score + g.Away_score
+                                         MatchYear = g.Date.Year,
+                                         Team1 = g.Home_team,
+                                         Team2 = g.Away_team,
+                                         Goals = g.Home_score + g.Away_score
                                      });
 
 
@@ -268,7 +270,7 @@ namespace Practice_Linq
                                      .GroupBy(g => g.Tournament)
                                      .Select(group => new { Tournament = group.Key, Count = group.Count() })
                                      .Where(res => res.Count > 200)
-                                     .OrderByDescending(res => res.Count);
+                                     .OrderBy(res => res.Count);
 
 
             // Результат
